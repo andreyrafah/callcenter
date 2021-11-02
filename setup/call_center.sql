@@ -149,6 +149,26 @@ CREATE TABLE IF NOT EXISTS `calls` (
   CONSTRAINT `calls_ibfk_2` FOREIGN KEY (`id_agent`) REFERENCES `agent` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+IF NOT EXISTS( SELECT NULL
+            FROM INFORMATION_SCHEMA.COLUMNS
+           WHERE table_name = 'calls'
+             AND table_schema = 'call_center'
+             AND column_name = 'khomp_id')  THEN
+
+ALTER TABLE `calls` ADD `khomp_id` varchar(50) default NULL;
+
+END IF;
+
+IF NOT EXISTS( SELECT NULL
+            FROM INFORMATION_SCHEMA.COLUMNS
+           WHERE table_name = 'calls'
+             AND table_schema = 'call_center'
+             AND column_name = 'hangup_origin')  THEN
+
+ALTER TABLE `calls` ADD `hangup_origin` varchar(50) default NULL;
+
+END IF;
+
 --
 -- Table structure for table `campaign_lists`
 --
@@ -197,6 +217,7 @@ CREATE TABLE IF NOT EXISTS `campaign` (
     `estatus`           varchar(1) NOT NULL default 'A',
     `id_url`            int unsigned,
    `callerid`        varchar(15) default NULL,
+    `created_at` timestamp default
 
   PRIMARY KEY  (`id`),
   FOREIGN KEY (id_url)  REFERENCES campaign_external_url(id)
@@ -1055,6 +1076,8 @@ DELIMITER ; ++
 
 CALL temp_indice_agent_2016_01_29();
 DROP PROCEDURE IF EXISTS temp_indice_agent_2016_01_29;
+
+
 
 
 /*!40000 ALTER TABLE `queue_call_entry` ENABLE KEYS */;
