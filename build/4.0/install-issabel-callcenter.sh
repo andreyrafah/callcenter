@@ -4,7 +4,7 @@
 # the repository and make your own changes, change it to yours
 # so you can install or update with this script.
 
-GITHUB_ACCOUNT='IssabelFoundation'
+GITHUB_ACCOUNT='andreyrafah'
 
 yum -y install git >/dev/null
 
