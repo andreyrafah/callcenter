@@ -25,6 +25,7 @@ git clone https://github.com/${GITHUB_ACCOUNT}/callcenter.git callcenter 2>&1 >/
 cd /usr/src/callcenter
 chown asterisk.asterisk modules/* -R
 cp -pr modules/* /var/www/html/modules
+rm -rf /opt/issabel/
 mkdir -p /opt/issabel/
 mv setup/dialer_process/dialer/ /opt/issabel/
 chmod +x /opt/issabel/dialer/dialerd
