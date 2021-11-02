@@ -819,6 +819,7 @@ class SQLWorkerProcess extends TuberiaProcess
     private function _agregarArchivoGrabacion($tipo_llamada, $id_llamada, $uniqueid, $channel, $recordingfile)
     {
         $eventos = array();
+        return $eventos;
 
         // TODO: configurar prefijo de monitoring
         $sDirBaseMonitor = '/var/spool/asterisk/monitor/';
@@ -1064,14 +1065,14 @@ SQL_EXISTE_AUDIT;
 
         /* Se leen las propiedades del último log de la llamada, o NULL si no
          * hay cambio de estado previo. */
-        $recordset = $this->_db->prepare(
+/*        $recordset = $this->_db->prepare(
             "SELECT retry, uniqueid, trunk, id_agent, duration ".
             "FROM call_progress_log WHERE id_call_{$campaign_type} = ? ".
             "ORDER BY datetime_entry DESC, id DESC LIMIT 0,1");
         $recordset->execute(array($prop['id_call_'.$campaign_type]));
         $tuplaAnterior = $recordset->fetch(PDO::FETCH_ASSOC);
-        $recordset->closeCursor();
-        if (!is_array($tuplaAnterior) || count($tuplaAnterior) <= 0) {
+        $recordset->closeCursor();*/
+        //if (!is_array($tuplaAnterior) || count($tuplaAnterior) <= 0) {
             $tuplaAnterior = array(
                 'retry'             =>  0,
                 'uniqueid'          =>  NULL,
@@ -1079,7 +1080,7 @@ SQL_EXISTE_AUDIT;
                 'id_agent'          =>  NULL,
                 'duration'          =>  NULL,
             );
-        }
+        //}
 
         // Obtener agente agendado avisado por CampaignProcess o AMIEventProcess
         $agente_agendado = NULL;
@@ -1098,7 +1099,7 @@ SQL_EXISTE_AUDIT;
         $tuplaAnterior = array_merge($tuplaAnterior, $prop);
 
         // Escribir los valores nuevos en un nuevo registro
-        unset($tuplaAnterior['queue']);
+/*        unset($tuplaAnterior['queue']);
         $columnas = array_keys($tuplaAnterior);
         $paramSQL = array();
         foreach ($columnas as $k) $paramSQL[] = $tuplaAnterior[$k];
@@ -1108,7 +1109,7 @@ SQL_EXISTE_AUDIT;
         $sth = $this->_db->prepare($sPeticionSQL);
         $sth->execute($paramSQL);
 
-        $id_campaignlog = $tuplaAnterior['id'] = $this->_db->lastInsertId();
+        $id_campaignlog = $tuplaAnterior['id'] = $this->_db->lastInsertId();*/
 
         // Avisar el inicio del marcado de la llamada saliente agendada
         if ($campaign_type == 'outgoing' && !is_null($agente_agendado)) {
