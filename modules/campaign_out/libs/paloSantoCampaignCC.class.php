@@ -506,9 +506,13 @@ SELECT
     c.start_time        AS fecha_hora,
     c.duration          AS duracion,
     c.uniqueid          AS uniqueid,
-    c.failure_cause     AS failure_cause,
-    c.failure_cause_txt AS failure_cause_txt,
-    b.recordingfile     AS recordingfile
+    c.khomp_id as khomp_id,
+    c.billsec as billsec,
+    c.billing as billing,
+    c.hangup_cause as motivo_desligamento,
+    c.hangup_origin as origem_desligamento,
+    b.recordingfile AS recordingfile
+
 FROM campaign_lists cl
 RIGHT JOIN calls c ON cl.id = c.id_list
 LEFT JOIN agent a ON c.id_agent = a.id
@@ -536,8 +540,10 @@ SQL_LLAMADAS;
                     _tr('Date & Time'),
                     _tr('Duration'),
                     'Uniqueid',
-                    _tr('Failure Code'),
-                    _tr('Failure Cause'),
+                    'vcdr_id',
+                    'billsec',
+                    'custo',
+                    'motivo_desligamento',
 		    _tr('Recording File'),
                 ),
                 'DATA'  =>  $datosTelefonos,
