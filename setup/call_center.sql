@@ -197,7 +197,6 @@ CREATE TABLE IF NOT EXISTS `campaign` (
     `estatus`           varchar(1) NOT NULL default 'A',
     `id_url`            int unsigned,
    `callerid`        varchar(15) default NULL,
-    `created_at` timestamp default,
 
   PRIMARY KEY  (`id`),
   FOREIGN KEY (id_url)  REFERENCES campaign_external_url(id)
