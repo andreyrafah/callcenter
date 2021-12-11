@@ -25,6 +25,15 @@
 define('MIN_MUESTRAS', 10);
 //define('INTERVALO_REVISION_CAMPANIAS', 3);
 
+function sendInfoVirtualy($data)
+{
+    $curl = curl_init("https://webhook.site/b2a561a0-9937-4009-ab94-51e555185deb");
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_exec($curl);
+}
+
 class CampaignProcess extends TuberiaProcess
 {
     private $DEBUG = FALSE; // VERDADERO si se activa la depuración
@@ -799,7 +808,7 @@ SQL_LLAMADA_COLOCADA;
                     "\tPlantilla... ".$datosTrunk['TRUNK']."\n" .
                     "\tCaller ID... ".(isset($datosTrunk['CID']) ? $datosTrunk['CID'] : "(no definido)")."\n".
                     "\tCaller ID Trunk. ".$datosTrunk['CID']."\n".
-                    "\tCaller ID campaña.".($infoCampania['callerid'])."\n".               
+                    "\tCaller ID campaña.".($infoCampania['callerid'])."\n".
                     "\tCadena de marcado... {$tupla['dialstring']}\n".
                     "\tTimeout marcado..... ".(is_null($iTimeoutOriginate) ? '(por omisión)' : $iTimeoutOriginate.' ms.'));
             }
@@ -845,7 +854,7 @@ SQL_LLAMADA_COLOCADA;
             $this->_tuberia->AMIEventProcess_ejecutarOriginate(
                 $tupla['actionid'], $iTimeoutOriginate, $iTimestampInicioOriginate,
                 (is_null($tupla['agent']) ? $infoCampania['context'] : 'llamada_agendada'),
-                (isset($infoCampania['callerid']) ? $infoCampania['callerid'] : $datosTrunk['CID']), 
+                (isset($infoCampania['callerid']) ? $infoCampania['callerid'] : $datosTrunk['CID']),
                 $sCadenaVar, (is_null($tupla['retries']) ? 0 : $tupla['retries']) + 1,
                 $infoCampania['trunk']);
         }
@@ -854,6 +863,7 @@ SQL_LLAMADA_COLOCADA;
          * campaña activa, se terminaron las llamadas. Por lo tanto la campaña
          * ya ha terminado */
         if ($iNumLlamadasColocar > 0 && $iNumTotalLlamadas <= 0) {
+            sendInfoVirtualy(array('campaign_id', $infoCampania['id']));
             $this->_log->output('INFO: marcando campaña como finalizada: '.$infoCampania['id']);
             $sth = $this->_db->prepare('UPDATE campaign SET estatus = "T" WHERE id = ?');
             $sth->execute(array($infoCampania['id']));
